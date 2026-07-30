@@ -13,6 +13,7 @@ export const files = sqliteTable("files", {
   scanStatus: text("scan_status").notNull().default("scanning"), // scanning | safe | blocked
   scanSummary: text("scan_summary").notNull().default(""),
   threatsDetected: text("threats_detected"), // JSON array of threat strings, null if none
+  fileNotes: text("file_notes"), // JSON: file intelligence (type, module, connections, howItWorks, githubHints)
   safeCopyPath: text("safe_copy_path").notNull(),
   createdAt: integer("created_at").notNull().default(Math.floor(Date.now() / 1000)),
   scannedAt: integer("scanned_at"),
