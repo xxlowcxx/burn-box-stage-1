@@ -1,0 +1,48 @@
+{
+  "name": "burn-box-desktop",
+  "version": "2.0.0",
+  "private": true,
+  "description": "Burn Box desktop shell (Windows + Linux) via Electron",
+  "main": "main.cjs",
+  "scripts": {
+    "start": "electron .",
+    "pack:linux": "electron-builder --linux AppImage deb dir",
+    "pack:win": "electron-builder --win nsis portable",
+    "pack": "electron-builder --linux --win"
+  },
+  "build": {
+    "appId": "com.toolaid.burnbox",
+    "productName": "Burn Box",
+    "directories": {
+      "output": "dist-electron"
+    },
+    "files": [
+      "main.cjs",
+      "preload.cjs",
+      "icon.png"
+    ],
+    "extraResources": [
+      {
+        "from": "../../dist",
+        "to": "burn-box-server",
+        "filter": ["**/*"]
+      }
+    ],
+    "linux": {
+      "target": ["AppImage", "deb"],
+      "category": "Utility",
+      "maintainer": "Toolaid <xxlowcxx@users.noreply.github.com>"
+    },
+    "win": {
+      "target": ["nsis", "portable"]
+    },
+    "nsis": {
+      "oneClick": false,
+      "allowToChangeInstallationDirectory": true
+    }
+  },
+  "devDependencies": {
+    "electron": "^33.2.0",
+    "electron-builder": "^25.1.8"
+  }
+}
