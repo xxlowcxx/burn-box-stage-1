@@ -1,74 +1,112 @@
-# Burn Box — Stage 1: SafeDrive
+# Burn Box — Stage 2 (multi-platform vault)
 
-*Working name: Burn Box. This repository is Stage 1 of a planned multi-stage project.*
+*Working name: Burn Box. Stage 1 pipeline + Stage 2 platforms, storage, management, conversion, large files.*
 
-SafeDrive is a read-only file vault. Every file you upload is sent to quarantine, run through a safety scanner, rewritten into a sanitized "safe copy," and the original is permanently deleted — so nothing unscanned ever stays in the drive.
+Burn Box is a **read-only file vault**. Every file you upload is sent to quarantine, run through a safety scanner, rewritten into a sanitized safe copy, and the **original is permanently deleted** — so nothing unscanned ever stays in the drive.
 
-> **Honesty note:** the scanner in Stage 1 is a deterministic pattern/regex matcher, not a trained AI model or commercial antivirus engine. See [Limitations](docs/stage-1-technical-paper.md#4-limitations-read-before-treating-stage-1-as-production-security) before relying on it for real security decisions.
+> **Honesty note:** the scanner is still a deterministic pattern/regex matcher (plus streaming/MIME checks for large binaries), not a commercial AV engine. See [docs/stage-1-technical-paper.md](docs/stage-1-technical-paper.md).
 
-## What Stage 1 does
+## Stage 2 highlights
 
-1. **Upload** — drag-and-drop or file picker, straight into a quarantine directory.
-2. **Scan** — text/code files are checked against a set of threat patterns (script tags, `eval()`, shell commands, SQL injection, macros, etc.). Binary files (images, PDFs) get a MIME/size check. Unknown types get a metadata capsule.
-3. **Sanitize & rebuild** — clean files get a scan-report header and are copied through; files with threats have the matched spans redacted before the safe copy is written.
-4. **Delete the original** — the quarantined file is deleted the moment the safe copy exists, regardless of outcome.
-5. **Lock it down** — every safe copy is written read-only (`chmod 0o444`); there is no edit endpoint in the app.
-6. **Audit everything** — every step (upload, scan start, scan complete, original deleted, safe copy created, viewed, downloaded, deleted) is logged and viewable in-app.
+| Feature | Detail |
+|---------|--------|
+| **Platforms** | Linux, Windows (Electron), Android + iOS (Capacitor), plus web |
+| **Storage** | **Local** disk + **Cloud** (mirror always; remote S3/Supabase when configured) |
+| **File management** | Search, rename/display name, folders, tags, backend move, bulk delete |
+| **Conversion** | MD↔HTML, HTML→text, CSV↔JSON, base64, hex, case transforms → **new** safe files |
+| **Large files** | Max **20 GB** / file · confirm over **5 GB** · burn→snap→shiny animation over **1 GB** |
 
-## Documentation
+### Was file management / conversion already there?
 
-- [Stage 1 Technical Paper](docs/stage-1-technical-paper.md) — architecture, threat model, and limitations.
-- [Research Bibliography](docs/papers/README.md) — academic sources on content disarm & reconstruction, malware detection, file-upload security, and sandboxing that inform Stage 1 and the roadmap.
+**No (Stage 1).** Stage 1 was list / view / download / delete + audit.  
+**Yes now (Stage 2):** manage + convert APIs and UI are included.
 
-## Stack
+## Platforms
 
-Express · React + Vite · Tailwind CSS + shadcn/ui · SQLite + Drizzle ORM · Multer
+See [`platforms/README.md`](platforms/README.md).
 
-## Running locally
+```
+platforms/
+  desktop/     Electron — Windows + Linux
+  windows/     Windows notes
+  linux/       Linux notes
+  mobile/      Capacitor shared config
+  android/     Android build notes
+  ios/         iOS build notes
+```
+
+## Run (web / API)
 
 ```bash
 npm install
 npm run dev
 ```
 
-Starts Express (backend) and Vite (frontend) on the same port (5000 by default).
+Default: http://localhost:5000
 
-### Database setup
+### Desktop (Windows / Linux)
 
 ```bash
-npx drizzle-kit generate
-npx drizzle-kit push
+npm run desktop:install
+npm run desktop          # spawns vault + Electron window
 ```
 
-This creates `data.db` (SQLite) with the `files` and `audit_logs` tables. `data.db` and everything under `storage/quarantine/` and `storage/safe/` are gitignored — the vault always starts empty.
-
-### Production build
+### Mobile (Android / iOS)
 
 ```bash
 npm run build
-NODE_ENV=production node dist/index.cjs
+npm run mobile:install
+cd platforms/mobile && npx cap add android   # or ios on macOS
+npm run mobile:sync
+npx cap open android   # or ios
 ```
+
+## Large-file policy
+
+| Threshold | Behavior |
+|-----------|----------|
+| **> 20 GB** | Rejected (HTTP 413) |
+| **> 5 GB** | Requires explicit confirm (`X-Burn-Box-Confirm-Large: 1`) — stops runaway watchers |
+| **> 1 GB** | Client plays fire → snap → new shiny box, then upload proceeds |
+| **> 100 MB** text/binary | Streaming / partial scan — never loads whole file into RAM |
+
+## Cloud storage
+
+```bash
+cp .env.example .env
+# set BURNBOX_S3_* or SUPABASE S3 gateway vars
+```
+
+Without remote credentials, **Cloud** still writes under `storage/cloud-mirror/` so both modes work offline.
 
 ## Project structure
 
 ```
-client/            React frontend (drive view, audit log, file viewer)
-server/            Express backend: upload endpoint, scan pipeline, storage interface
-shared/schema.ts   Drizzle schema shared between frontend and backend
-storage/quarantine/  Temporary holding area for files awaiting scan (empty in repo)
-storage/safe/         Read-only sanitized safe copies (empty in repo)
-docs/              Technical paper + research bibliography
+client/            React UI (drive, audit, manage, convert, burn animation)
+server/            Express: upload, scan, convert, storage backends
+shared/            Schema, limits, convert matrix
+platforms/         Desktop + mobile shells
+storage/           quarantine / safe / cloud-mirror (gitignored contents)
+docs/              Technical paper + bibliography
 ```
 
-## Roadmap
+## Roadmap (next)
 
-Stage 1 is intentionally minimal. Planned next stages (see [technical paper §5](docs/stage-1-technical-paper.md#5-roadmap-stage-2)):
+- Real CDR for images/PDFs, magic-byte sniffing
+- Resumable chunked uploads for multi-GB mobile
+- On-device offline vault for iOS/Android (Filesystem)
+- Optional ClamAV / ML classifier sidecar
+- Background transfer + progress UI for huge files
 
-- Real Content Disarm & Reconstruction for images/PDFs (not just a MIME/size check)
-- Magic-byte content sniffing instead of trusting declared MIME type
-- Isolated sandbox for dynamic analysis
-- Evaluation of a real AV engine or ML-based classifier alongside the pattern scanner
-- Archive/zip-bomb handling
+## Ideas to make it better
+
+- Resumable uploads (tus) + pause/resume
+- Encrypted vault (age/libsodium) at rest
+- Folder sharing / device pairing QR
+- Automatic format packs (LibreOffice headless, ffmpeg) for rich convert
+- Watch folders with **opt-in** size caps (never silent multi-GB)
+- Threat timeline + exportable compliance reports
+- Passkey lock on the vault
 
 ## License
 

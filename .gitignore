@@ -11,8 +11,17 @@ data.db-journal
 # Runtime file storage — vault contents should never be committed
 storage/quarantine/*
 storage/safe/*
+storage/cloud-mirror/*
 !storage/quarantine/.gitkeep
 !storage/safe/.gitkeep
+!storage/cloud-mirror/.gitkeep
+
+# Platform build outputs
+platforms/desktop/node_modules/
+platforms/desktop/dist-electron/
+platforms/mobile/node_modules/
+platforms/mobile/android/
+platforms/mobile/ios/
 
 .env
 .env.*
