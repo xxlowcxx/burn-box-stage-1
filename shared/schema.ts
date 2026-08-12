@@ -15,6 +15,14 @@ export const files = sqliteTable("files", {
   threatsDetected: text("threats_detected"), // JSON array of threat strings, null if none
   fileNotes: text("file_notes"), // JSON: file intelligence (type, module, connections, howItWorks, githubHints)
   safeCopyPath: text("safe_copy_path").notNull(),
+  // Stage 2 — file management + multi-backend storage
+  displayName: text("display_name"),
+  folder: text("folder").default(""),
+  tags: text("tags"), // JSON string array
+  storageBackend: text("storage_backend").default("local"), // local | cloud
+  remoteUrl: text("remote_url"),
+  parentFileId: integer("parent_file_id"),
+  convertedFrom: text("converted_from"),
   createdAt: integer("created_at").notNull().default(Math.floor(Date.now() / 1000)),
   scannedAt: integer("scanned_at"),
 });

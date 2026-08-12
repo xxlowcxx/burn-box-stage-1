@@ -1,6 +1,6 @@
 {
-  "name": "rest-express",
-  "version": "1.0.0",
+  "name": "burn-box",
+  "version": "2.0.0",
   "license": "MIT",
   "type": "module",
   "scripts": {
@@ -8,7 +8,11 @@
     "build": "tsx script/build.ts",
     "start": "NODE_ENV=production node dist/index.cjs",
     "check": "tsc",
-    "db:push": "drizzle-kit push"
+    "db:push": "drizzle-kit push",
+    "desktop": "npm --prefix platforms/desktop start",
+    "desktop:install": "npm --prefix platforms/desktop install",
+    "mobile:install": "npm --prefix platforms/mobile install",
+    "mobile:sync": "npm --prefix platforms/mobile run prepare:native"
   },
   "dependencies": {
     "@hookform/resolvers": "^5.4.0",
