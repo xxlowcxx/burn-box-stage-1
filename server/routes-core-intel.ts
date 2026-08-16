@@ -99,11 +99,15 @@ export function analyzeFileIntelligence(
   }
 
   if (content) {
-    for (const m of content.matchAll(/import\s+.*?from\s+['"]([^'"]+)['"]/g)) {
-      connections.push({ type: "import", target: m[1], evidence: `from "${m[1]}"` });
+    const importRe = /import\s+.*?from\s+['"]([^'"]+)['"]/g;
+    let im: RegExpExecArray | null;
+    while ((im = importRe.exec(content)) !== null) {
+      connections.push({ type: "import", target: im[1], evidence: `from "${im[1]}"` });
     }
-    for (const m of content.matchAll(/require\(['"]([^'"]+)['"]\)/g)) {
-      connections.push({ type: "require", target: m[1], evidence: `require("${m[1]}")` });
+    const requireRe = /require\(['"]([^'"]+)['"]\)/g;
+    let rm: RegExpExecArray | null;
+    while ((rm = requireRe.exec(content)) !== null) {
+      connections.push({ type: "require", target: rm[1], evidence: `require("${rm[1]}")` });
     }
   }
 
