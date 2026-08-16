@@ -19,8 +19,11 @@ Last updated: 2026-08-16
 ### Limits (`shared/limits.ts`)
 - Hard cap 20 GB, confirm >5 GB, animation >1 GB — unchanged policy; ensure multer / body limits match this on the live upload route.
 
+## Done for Stage 2 share
+1. Upload path uses `routes-core-upload` multer capped at `MAX_FILE_BYTES` (20 GB) — fat Stage-1 25 MB router removed.
+2. `/api/files/:id/view` reads at most 2 MB into memory and marks `truncated` for larger files; download uses `res.download` (streamed by Express).
+
 ## Recommended next steps
-1. Align any remaining upload route (e.g. legacy `routes.ts` multer 25 MB) with `MAX_FILE_BYTES` (20 GB).
-2. Make intelligence analysis optional / async so it never blocks the critical quarantine → safe path.
-3. Stream `/api/files/:id/view` and download for large safe copies.
-4. Consider worker thread for regex scan on multi-MB text to keep the event loop free under concurrent uploads.
+1. Make intelligence analysis optional / async so it never blocks the critical quarantine → safe path.
+2. Consider worker thread for regex scan on multi-MB text to keep the event loop free under concurrent uploads.
+3. tus / chunked resumable upload for flaky mobile links.

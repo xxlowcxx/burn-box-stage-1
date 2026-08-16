@@ -1,27 +1,28 @@
-# Burn Box — Stage 2 Complete
+# Burn Box
 
-*Working name: Burn Box. Sanitized read-only file vault.*
+**Sanitized read-only file vault.** Stage 2 complete · v2.0.0 · MIT
 
-Burn Box is a **read-only file vault**. Every file you upload is sent to quarantine, run through a safety scanner, rewritten into a sanitized safe copy, and the **original is permanently deleted** — so nothing unscanned ever stays in the drive.
+Every file you upload lands in **quarantine**, runs through a **safety scanner**, is rewritten into a **sanitized safe copy**, and the **original is permanently deleted**. Nothing unscanned stays in the drive.
 
-> **Honesty note:** the scanner is a deterministic pattern/regex matcher (plus streaming/MIME checks for large binaries), not a commercial AV engine.
+> **Honesty note:** the scanner is a deterministic pattern/regex matcher (plus streaming/MIME checks for large binaries), **not** a commercial AV engine. See [SECURITY.md](SECURITY.md) and [docs/stage-1-technical-paper.md](docs/stage-1-technical-paper.md).
 
-**Stage 2 status: COMPLETE** — see [STATUS.md](STATUS.md) and [ABILITIES.md](ABILITIES.md).
+**Status:** [STATUS.md](STATUS.md) · **Abilities:** [ABILITIES.md](ABILITIES.md) · **Scope:** [SCOPE.md](SCOPE.md)
 
 ## Why it stands out
 
-Most lockers keep the original. Burn Box **burns** it after scan. Only the safe, audited copy remains.
+Most lockers **keep the original**. Burn Box **burns** it after scan. Only the safe, audited copy remains.
 
-## Stage 2 features
+## Features (Stage 2)
 
 | Feature | Detail |
 |---------|--------|
-| **Platforms** | Linux, Windows (Electron), Android + iOS (Capacitor), plus web |
-| **Storage** | **Local** disk + **Cloud** (mirror always; remote S3/Supabase when configured) |
-| **File management** | Search, rename/display name, folders, tags, backend move, bulk delete |
-| **Conversion** | MD↔HTML, HTML→text, CSV↔JSON, base64, hex, case transforms → **new** safe files |
-| **Large files** | Max **20 GB** / file · confirm over **5 GB** · burn→snap→shiny animation over **1 GB** |
-| **Audit** | Full trail of upload, scan, burn, view, download, delete |
+| **Pipeline** | Quarantine → scan → sanitize → **burn original** → read-only vault |
+| **Platforms** | Web · Electron (Windows/Linux) · Capacitor notes (Android/iOS) |
+| **Storage** | **Local** disk + **Cloud** mirror (S3/Supabase when configured) |
+| **Manage** | Search, display name, folders, tags, backend move, bulk delete |
+| **Convert** | MD↔HTML, HTML→text, CSV↔JSON, base64, hex, case → **new** safe files |
+| **Large files** | Max **20 GB** · confirm **>5 GB** · burn ritual **>1 GB** |
+| **Audit** | Upload, scan, burn, view, download, delete — full trail |
 
 ## Run (web / API)
 
@@ -54,24 +55,52 @@ npx cap open android   # or ios
 | Threshold | Behavior |
 |-----------|----------|
 | **> 20 GB** | Rejected (HTTP 413) |
-| **> 5 GB** | Requires explicit confirm (`X-Burn-Box-Confirm-Large: 1`) |
-| **> 1 GB** | Client plays fire → snap → new shiny box, then upload proceeds |
-| **> 100 MB** text/binary | Streaming / partial scan — never loads whole file into RAM |
+| **> 5 GB** | Requires confirm header `X-Burn-Box-Confirm-Large: 1` |
+| **> 1 GB** | Client plays fire → snap → new shiny box, then upload |
+| **> 100 MB** text | Streaming / partial scan — never loads whole file into RAM |
+
+## Cloud storage
+
+```bash
+cp .env.example .env
+# set BURNBOX_S3_* or Supabase S3 gateway vars
+```
+
+Without remote credentials, **Cloud** still writes under `storage/cloud-mirror/` so both modes work offline.
 
 ## Project structure
 
 ```
 client/            React UI (drive, audit, manage, convert, burn animation)
-server/            Express: upload, scan, convert, storage backends
+server/            Express API + routes-core scanner modules
 shared/            Schema, limits, convert matrix
 platforms/         Desktop + mobile shells
-storage/           quarantine / safe / cloud-mirror
+storage/           quarantine / safe / cloud-mirror (contents gitignored)
 docs/              Technical paper + performance notes
-ABILITIES.md       Product abilities + differentiation
-STATUS.md          Completion checklist
-SCOPE.md           What is / is not Burn Box
 ```
+
+## Docs
+
+| Doc | Purpose |
+|-----|---------|
+| [ABILITIES.md](ABILITIES.md) | What it does + differentiation |
+| [SCOPE.md](SCOPE.md) | What is / is not Burn Box |
+| [STATUS.md](STATUS.md) | Completion checklist |
+| [SECURITY.md](SECURITY.md) | Limitations + reporting |
+| [CONTRIBUTING.md](CONTRIBUTING.md) | How to contribute |
+| [CHANGELOG.md](CHANGELOG.md) | Release history |
+| [docs/PERFORMANCE.md](docs/PERFORMANCE.md) | Scanner / I/O notes |
+
+## Roadmap (Stage 3)
+
+- Real CDR for images/PDFs
+- Resumable chunked uploads
+- Optional ClamAV / ML sidecar
+- Encrypted-at-rest vault
+- Stronger hosted auth (if ever multi-user)
 
 ## License
 
 MIT — see [LICENSE](LICENSE).
+
+**T00L-AID · Powered by Siren Logix**
