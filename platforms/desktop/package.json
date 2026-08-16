@@ -31,10 +31,12 @@
     "linux": {
       "target": ["AppImage", "deb"],
       "category": "Utility",
+      "icon": "icon.png",
       "maintainer": "Toolaid <xxlowcxx@users.noreply.github.com>"
     },
     "win": {
-      "target": ["nsis", "portable"]
+      "target": ["nsis", "portable"],
+      "icon": "icon.png"
     },
     "nsis": {
       "oneClick": false,

@@ -15,16 +15,11 @@ import { ScrollArea } from "@/components/ui/scroll-area";
 function Sidebar() {
   return (
     <aside className="hidden md:flex flex-col w-56 shrink-0 border-r border-border bg-sidebar p-4 gap-4">
-      {/* Logo */}
+      {/* Logo — cartoon CPU on fire */}
       <div className="flex items-center gap-2.5 px-2 py-2">
-        <svg width="28" height="28" viewBox="0 0 32 32" fill="none" className="text-primary shrink-0">
-          <path d="M16 4L4 9v7c0 6.5 5 11.5 12 12 7-.5 12-5.5 12-12V9L16 4z"
-            stroke="currentColor" strokeWidth="2" fill="none" strokeLinejoin="round" />
-          <path d="M11 16l3.5 3.5L21 13" stroke="currentColor" strokeWidth="2.5"
-            strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <img src="/icon-512.png" width={32} height={32} alt="Burn Box" className="shrink-0 rounded-lg shadow-sm" />
         <span className="font-bold text-lg tracking-tight" style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}>
-          SafeDrive
+          Burn Box
         </span>
       </div>
 
@@ -62,14 +57,9 @@ function TopBar() {
     <header className="flex items-center justify-between px-4 sm:px-6 py-3 border-b border-border bg-background/80 backdrop-blur-sm sticky top-0 z-10">
       {/* Mobile logo */}
       <div className="flex items-center gap-2.5 md:hidden">
-        <svg width="24" height="24" viewBox="0 0 32 32" fill="none" className="text-primary shrink-0">
-          <path d="M16 4L4 9v7c0 6.5 5 11.5 12 12 7-.5 12-5.5 12-12V9L16 4z"
-            stroke="currentColor" strokeWidth="2" fill="none" strokeLinejoin="round" />
-          <path d="M11 16l3.5 3.5L21 13" stroke="currentColor" strokeWidth="2.5"
-            strokeLinecap="round" strokeLinejoin="round" />
-        </svg>
+        <img src="/icon-512.png" width={28} height={28} alt="Burn Box" className="shrink-0 rounded-lg" />
         <span className="font-bold text-base tracking-tight" style={{ fontFamily: "'Cabinet Grotesk', sans-serif" }}>
-          SafeDrive
+          Burn Box
         </span>
       </div>
 
