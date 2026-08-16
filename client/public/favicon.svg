@@ -1,5 +1,58 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" fill="none">
-  <rect width="32" height="32" rx="7" fill="#0a1a1f"/>
-  <path d="M16 4L4 9v7c0 6.5 5 11.5 12 12 7-.5 12-5.5 12-12V9L16 4z" stroke="#2dd4bf" stroke-width="2" fill="none" stroke-linejoin="round"/>
-  <path d="M11 16l3.5 3.5L21 13" stroke="#2dd4bf" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" fill="none">
+  <!-- Burn Box icon: cartoon CPU / monitor on fire -->
+  <defs>
+    <linearGradient id="screen" x1="0" y1="0" x2="0" y2="1">
+      <stop offset="0%" stop-color="#0f766e"/>
+      <stop offset="100%" stop-color="#042f2e"/>
+    </linearGradient>
+    <linearGradient id="flame" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#fbbf24"/>
+      <stop offset="45%" stop-color="#f97316"/>
+      <stop offset="100%" stop-color="#ef4444"/>
+    </linearGradient>
+    <linearGradient id="flameCore" x1="0" y1="1" x2="0" y2="0">
+      <stop offset="0%" stop-color="#fef08a"/>
+      <stop offset="100%" stop-color="#fb923c"/>
+    </linearGradient>
+  </defs>
+
+  <!-- rounded dark tile -->
+  <rect width="64" height="64" rx="14" fill="#0b1220"/>
+
+  <!-- outer flames (behind chassis) -->
+  <path d="M18 28c-2 4-3 8-1 12 3-2 4-5 4-8 2 3 2 7 0 10 5-1 7-6 6-12-1 2-3 3-5 3 1-4 0-8-4-11z" fill="url(#flame)" opacity="0.95"/>
+  <path d="M46 26c2 4 3 9 1 13-3-2-4-5-4-8-2 3-2 7 0 10-5-1-7-6-6-12 1 2 3 3 5 3-1-4 0-9 4-12z" fill="url(#flame)" opacity="0.95"/>
+  <path d="M32 8c3 5 4 9 2 14 4-2 6-6 5-11 3 4 3 9 1 13 6-2 8-8 7-14-2 3-5 4-7 4 0-4-2-8-8-12z" fill="url(#flame)"/>
+
+  <!-- flame core -->
+  <path d="M32 16c2 3 2 6 1 9 2-1 3-4 2-7 2 3 1 6 0 9 3-1 4-5 3-9-1 2-2 3-4 3 0-3-1-5-2-8z" fill="url(#flameCore)"/>
+
+  <!-- CPU / monitor body -->
+  <rect x="14" y="24" width="36" height="28" rx="4" fill="#1e293b" stroke="#94a3b8" stroke-width="1.5"/>
+  <!-- bezel -->
+  <rect x="17" y="27" width="30" height="20" rx="2" fill="url(#screen)" stroke="#2dd4bf" stroke-width="1.2"/>
+
+  <!-- scan lines + terminal blink -->
+  <path d="M20 31h24M20 35h18M20 39h20M20 43h12" stroke="#5eead4" stroke-width="1.2" stroke-linecap="round" opacity="0.85"/>
+  <rect x="20" y="42" width="5" height="2.5" rx="0.5" fill="#fbbf24"/>
+
+  <!-- CPU pin nubs -->
+  <rect x="11" y="30" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="11" y="36" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="11" y="42" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="50" y="30" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="50" y="36" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="50" y="42" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="22" y="52" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="30" y="52" width="3" height="3" rx="0.5" fill="#64748b"/>
+  <rect x="38" y="52" width="3" height="3" rx="0.5" fill="#64748b"/>
+
+  <!-- stand -->
+  <rect x="28" y="52" width="8" height="3" rx="1" fill="#334155"/>
+  <rect x="24" y="55" width="16" height="2.5" rx="1" fill="#475569"/>
+
+  <!-- tiny sparks -->
+  <circle cx="22" cy="18" r="1.2" fill="#fde68a"/>
+  <circle cx="42" cy="14" r="1" fill="#fdba74"/>
+  <circle cx="36" cy="22" r="0.9" fill="#fecaca"/>
 </svg>
